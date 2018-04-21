@@ -1,0 +1,73 @@
+{
+  "users": {
+    "julianburr": {
+      "login": "julianburr",
+      "name": "Julian Burr",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/11925584?s=460&v=4",
+      "location": "Brisbane, Australia",
+      "repos": [
+        {
+          "name": "talk-suspense",
+          "stargazers_count": 90123
+        },
+        {
+          "name": "the-next-big-fe-framework",
+          "stargazers_count": 1
+        }
+      ],
+      "following": [
+        {
+          "login": "strongestavanger",
+          "avatar_url": "http://cdn-img.instyle.com/sites/default/files/styles/original/public/images/2017/08/2017-chris-hemsworth.jpg?itok=-zygkUpB"
+        },
+        {
+          "login": "likeayounggoose",
+          "avatar_url": "https://articlebio.com/uploads/bio/2017/07/20/ryan-gosling.jpg"
+        },
+        {
+          "login": "magnetoandgandalf",
+          "avatar_url": "https://media1.popsugar-assets.com/files/thumbor/oVyWjq2K9UxC6TQ2Het8dubyFVw/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2017/06/23/823/n/38761221/d7691d9e594d62001e6296.42205731_edit_img_image_14344989_1498242206/i/Ian-McKellen-Talking-About-Donald-Trump.jpg"
+        }
+      ]
+    },
+    "strongestavanger": {
+      "login": "strongestavanger",
+      "name": "Chris Hemsworth",
+      "location": "Asgard",
+      "avatar_url": "http://cdn-img.instyle.com/sites/default/files/styles/original/public/images/2017/08/2017-chris-hemsworth.jpg?itok=-zygkUpB",
+      "repos": [],
+      "following": [
+        {
+          "login": "julianburr",
+          "avatar_url": "https://avatars0.githubusercontent.com/u/11925584?s=460&v=4"
+        }
+      ]
+    },
+    "likeayounggoose": {
+      "login": "likeayounggoose",
+      "name": "Ryan Gosling",
+      "location": "London, Canada",
+      "avatar_url": "https://articlebio.com/uploads/bio/2017/07/20/ryan-gosling.jpg",
+      "repos": [],
+      "following": [
+        {
+          "login": "julianburr",
+          "avatar_url": "https://avatars0.githubusercontent.com/u/11925584?s=460&v=4"
+        }
+      ]
+    },
+    "magnetoandgandalf": {
+      "login": "magnetoandgandalf",
+      "name": "Ian McKellen",
+      "location": "Burnley, UK",
+      "avatar_url": "https://media1.popsugar-assets.com/files/thumbor/oVyWjq2K9UxC6TQ2Het8dubyFVw/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2017/06/23/823/n/38761221/d7691d9e594d62001e6296.42205731_edit_img_image_14344989_1498242206/i/Ian-McKellen-Talking-About-Donald-Trump.jpg",
+      "repos": [],
+      "following": [
+        {
+          "login": "julianburr",
+          "avatar_url": "https://avatars0.githubusercontent.com/u/11925584?s=460&v=4"
+        }
+      ]
+    }
+  }
+}

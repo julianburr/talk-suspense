@@ -1,5 +1,4 @@
-import { createResource } from 'simple-cache-provider';
-import withCache from './with-cache';
 import Placeholder from './placeholder';
+import createFetcher from './fetcher';
 
-export { createResource, withCache, Placeholder };
+export { createFetcher, Placeholder };

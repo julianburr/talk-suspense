@@ -1,15 +1,14 @@
 import React, { Fragment, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import { withCache, Placeholder, createResource } from './🚀';
+import { createFetcher, Placeholder } from './🚀';
 import api from './api';
 
-const getUser = createResource((user) => api.get(`/users/${user}`));
+const getUser = createFetcher((user) => api.get(`/users/${user}`));
 
-@withCache
 class UserProfile extends PureComponent {
   render () {
-    const { cache, user } = this.props;
-    const userData = getUser.read(cache, user).data;
+    const { user } = this.props;
+    const userData = getUser(user).data;
     return (
       <Fragment>
         <header>
@@ -48,13 +47,12 @@ class UserProfile extends PureComponent {
   }
 }
 
-const getRepos = createResource((user) => api.get(`/users/${user}/repos`));
+const getRepos = createFetcher((user) => api.get(`/users/${user}/repos`));
 
-@withCache
 class RepoList extends PureComponent {
   render () {
-    const { cache, user } = this.props;
-    const repos = getRepos.read(cache, user).data;
+    const { user } = this.props;
+    const repos = getRepos(user).data;
     return (
       <ul>
         {repos.map((repo) => (
@@ -70,15 +68,14 @@ class RepoList extends PureComponent {
   }
 }
 
-const getFollowing = createResource((user) =>
+const getFollowing = createFetcher((user) =>
   api.get(`/users/${user}/following`)
 );
 
-@withCache
 class FollowingList extends PureComponent {
   render () {
-    const { cache, user } = this.props;
-    const following = getFollowing.read(cache, user).data;
+    const { user } = this.props;
+    const following = getFollowing(user).data;
     return (
       <ul>
         {following.map((user) => (

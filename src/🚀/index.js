@@ -1,4 +1,4 @@
 import Placeholder from './placeholder';
-import createFetcher from './fetcher';
+import { createFetcher, cacheReducer } from './redux';
 
-export { createFetcher, Placeholder };
+export { createFetcher, cacheReducer, Placeholder };

@@ -4,8 +4,6 @@ import App from './app';
 
 import './index.css';
 
-console.log('process.env', process.env);
-
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 

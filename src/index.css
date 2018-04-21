@@ -134,3 +134,13 @@ body {
   color: gray;
   font-size: 12px;
 }
+
+.app .loading {
+  width: 100%;
+  padding: 12px 0;
+}
+
+.app .loading.loading-user {
+  text-align: center;
+  padding: 24px;
+}

@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom';
 import { createFetcher, Placeholder } from './🚀';
 import api from './api';
 
-const getUser = createFetcher(
-  (user) => api.get(`/users/${user}`),
-  (k) => `user-${k}`
-);
+const getUser = createFetcher((user) => api.get(`/users/${user}`));
 
 class UserProfile extends PureComponent {
   render () {
@@ -50,10 +47,7 @@ class UserProfile extends PureComponent {
   }
 }
 
-const getRepos = createFetcher(
-  (user) => api.get(`/users/${user}/repos`),
-  (k) => `repo-${k}`
-);
+const getRepos = createFetcher((user) => api.get(`/users/${user}/repos`));
 
 class RepoList extends PureComponent {
   render () {
@@ -74,9 +68,8 @@ class RepoList extends PureComponent {
   }
 }
 
-const getFollowing = createFetcher(
-  (user) => api.get(`/users/${user}/following`),
-  (k) => `following-${k}`
+const getFollowing = createFetcher((user) =>
+  api.get(`/users/${user}/following`)
 );
 
 class FollowingList extends PureComponent {

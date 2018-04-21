@@ -1,14 +1,18 @@
 import store from '../store';
+let i = 0;
 
 export const createFetcher = (method, hash = (i) => i) => {
+  let cacheKey = ++i;
   return (...args) => {
-    if (!store.getState().cache[hash(...args)]) {
+    const key = `${cacheKey}--${hash(...args)}`;
+    const fromCache = store.getState().cache[key];
+    if (!fromCache) {
       throw method(...args).then((response) => {
         return new Promise((resolve) => {
           store.dispatch({
             type: 'cache/ADD',
             payload: {
-              key: hash(...args),
+              key,
               data: response
             }
           });
@@ -19,7 +23,7 @@ export const createFetcher = (method, hash = (i) => i) => {
         });
       });
     }
-    return store.getState().cache[hash(...args)];
+    return fromCache;
   };
 };
 

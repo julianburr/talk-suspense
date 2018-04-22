@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { Placeholder, createFetcher } from './🚀';
 
-import fakeData from './💽/fake-data.json';
-
+const getUser = createFetcher((user) => api.get(`/users/${user}`));
 const UserProfile = ({ user }) => {
-  const userData = fakeData.users[user];
+  const userData = getUser(user).data;
   return (
     <Fragment>
       <header>
@@ -20,20 +20,31 @@ const UserProfile = ({ user }) => {
       <main>
         <section>
           <h2>Following</h2>
-          <FollowingList user={user} />
+          <Placeholder
+            delayMs={500}
+            fallback={<p className="loading">Loading users...</p>}
+          >
+            <FollowingList user={user} />
+          </Placeholder>
         </section>
 
         <section>
           <h2>Repos</h2>
-          <RepoList user={user} />
+          <Placeholder
+            delayMs={500}
+            fallback={<p className="loading">Loading repos...</p>}
+          >
+            <RepoList user={user} />
+          </Placeholder>
         </section>
       </main>
     </Fragment>
   );
 };
 
+const getRepos = createFetcher((user) => api.get(`/users/${user}/repos`));
 const RepoList = ({ user }) => {
-  const repos = fakeData.users[user].repos;
+  const repos = getRepos(user).data;
   return (
     <ul>
       {repos.map((repo) => (
@@ -48,8 +59,11 @@ const RepoList = ({ user }) => {
   );
 };
 
+const getFollowing = createFetcher((user) =>
+  api.get(`/users/${user}/following`)
+);
 const FollowingList = ({ user }) => {
-  const following = fakeData.users[user].following;
+  const following = getFollowing(user).data;
   return (
     <ul>
       {following.map((user) => (

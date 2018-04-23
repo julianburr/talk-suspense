@@ -1,6 +1,6 @@
 # React Suspense
 
-> This is a talk from the [Brisbane React JS meetup](https://www.meetup.com/en-AU/Brisbane-ReactJS-Meetup/), giving a very basic introduction into the new "suspense" feature of React and how it ties in with known problems around async data in React applications.
+> This is a talk from the [Brisbane React JS meetup](https://www.meetup.com/en-AU/Brisbane-ReactJS-Meetup/), giving a very basic introduction into [the new "suspense" feature](https://www.youtube.com/watch?v=v6iR3Zk4oDY) of React and how it ties in with known problems around async data in React applications.
 
 ## Getting started
 
@@ -8,18 +8,27 @@
 
 ```bash
 # Clone the repo
-git clone ...
+git clone git@github.com:julianburr/talk-suspense.git
 
 # Change into the repo folder
 cd talk-suspense
+
+# Set up your env file...
 
 # Install dependencies + start dev server
 yarn && yarn start
 ```
 
-Before you'd want to set up your `.env` file with [a personal github access token](https://developer.github.com/v3/#authentication), otherwise you might run into API rate limits at some point 😄
+Before, you'll want to set up your `.env` file with [a personal github access token](https://developer.github.com/v3/#authentication), otherwise you might run into API rate limits at some point 😄
 
-## Meta: The Evolution of data fetching in React
+Example for your `.env` file:
+
+```
+REACT_APP_GITHUB_ACCESS_TOKEN=[[YOUR ACCESS TOKEN]]
+REACT_APP_MY_GITHUB_PROFILE=[[YOUR (OR ANY) GITHUB USER NAME]]
+```
+
+## The evolution of data fetching in React
 
 ### Local state
 
@@ -36,7 +45,7 @@ class Example extends PureComponent {
   }
 
   componentDidMount () {
-		api.get('/example').then((data) => {
+    api.get('/example').then((data) => {
       this.setState({
         data,
         loading: false
@@ -49,16 +58,16 @@ class Example extends PureComponent {
   }
 
   render () {
-		const { data, loading } = this.state;
+    const { data, loading } = this.state;
     return (
-    	<div>
-      	<h1>Example</h1>
-				{loading ? <p>Loading...</p> : (
-					<ul>
-      			{data.map(item => <li>{item}</li>)}
-     			</ul>
-    		)}
-			</div>
+      <div>
+      <h1>Example</h1>
+        {loading ? <p>Loading...</p> : (
+          <ul>
+            {data.map(item => <li>{item}</li>)}
+          </ul>
+        )}
+      </div>
     );
   }
 }
@@ -115,8 +124,8 @@ const reducer = (state, action) => {
 const store = createStore(combineReducers({example: reducer}));
 
 const App = (
-	<Provider store={store}>
-  	<EnhancedExample />
+  <Provider store={store}>
+    <EnhancedExample />
   </Provider>
 );
 
@@ -134,13 +143,13 @@ class Example extends PureComponent {
   render () {
     const { loading, data } = this.props;
     return (
-    	<div>
+      <div>
         <h1>Example</h1>
-				{!data || loading ? <p>Loading...</p> : (
-					<ul>
-      			{data.map(item => <li>{item}</li>)}
-     			</ul>
-    		)}
+        {!data || loading ? <p>Loading...</p> : (
+          <ul>
+            {data.map(item => <li>{item}</li>)}
+          </ul>
+        )}
       </div>
     );
   }
@@ -163,18 +172,18 @@ And this is how it looks like in practise:
 
 ```jsx
 import React, { PureComponent } from 'react';
-import { Placeholder, withCache, createResource } from './🚀'; 
+import { Placeholder, createFetcher } from './🚀'; 
 // ^ utils built with React.Timeout and simple-cache-provider, see project source for more details :)
 
-const fetchExample = createSource(() => api.get('/example'));
+const fetchExample = createFetcher(() => api.get('/example'));
 
 class Example extends PureComponent {
   render () {
     return (
-    	<div>
-      	<h1>Example</h1>
+      <div>
+        <h1>Example</h1>
         <Placeholder delayMs={1000} fallback={<p>Loading...</p>}>
-        	<EnhancedList />
+          <List />
         </Placeholder>
       </div>
     );
@@ -184,20 +193,39 @@ class Example extends PureComponent {
 class List extends PureComponent {
   render () {
     const { cache } = this.props;
-    const data = fetchExample(cache);
+    const data = fetchExample();
     // ^ yes, we call `fetchExample` in render!! Forget what you learned and/or have been told over the last couple of years, this is ok 🙃😄
-		return (
-    	<ul>
+    return (
+      <ul>
         {data.map(item => <li>{item}</li>)}
       </ul>
     );
   }
 }
-
-const EnhancedList = withCache(List); 
-// ^ Just adds the cache from the context!
 ```
 
 `fetchExample` will check its cache (e.g. using the `simple-cache-provider`, but you can very easily write your own cache and fetcher 😊), if it finds the data there, awesome, it will use it and render as you want it to. If not, it will throw a promise (yes, I too learned that you can throw those things), which will get caught (by React error boundries I guess?!) and suspense the render of the component until the promise resolves. This is all handled by React internals, so you don't need to worry about it.
 
 The `Placeholder` is a simple component based on the new `React.Timeout` component, that can take a delay, which means it won't render until that time has run out (to avoid loading spinners flashing for 20ms before the content is loaded on fast connections) and then will render the fallback while the actual children are "suspended". This means the placeholder will show whenever anything in the tree below it is still pending on a promise. You can also nest placeholders to deal with multiple data being loaded. Pretty neat, huh?! 😄
+
+### An example for a cache provider implementation
+
+In this repo you can find a very basic and dumb implementation of a suspense cache provider.
+
+```js
+export const createFetcher = (method, hash = (i) => i) => {
+  let cache = {};
+  return (...args) => {
+    if (!cache[hash(...args)]) {
+      throw method(...args).then((response) => {
+        cache[hash(...args)] = response;
+      });
+    }
+    return cache[hash(...args)];
+  };
+};
+```
+
+All the `createFetcher` method does is initializing a cache storage, in this example a plain oject, and then return a function, that we can use in render, which checks the cache if we already have the requested data stored in the cache, and if not _throws_ the promise that we gave it to suspend the render of that component.
+
+That's all it is, that's all suspense is, the ability to throw promises during the render to suspend the components rendering until the promise is resolved 😊
